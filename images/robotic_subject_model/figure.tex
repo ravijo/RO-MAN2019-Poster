@@ -1,0 +1,196 @@
+\documentclass{standalone}
+%\documentclass{article}%just to see how much space it has taken
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, bending, shapes.misc, shapes.geometric}
+
+% define colors and other constants
+\colorlet{line color}{black!50}
+\colorlet{light blue}{blue!40}
+\colorlet{light gray}{gray!30}
+\def\line thickness{1pt}
+\def\left{-1}
+\def\right{+1}
+\newcommand{\xJointMarginX}{.5}
+\newcommand{\xJointMarginY}{.6}
+\newcommand{\verticalMargin}{.5}
+
+% define primitive shapes for the drawing
+\tikzset{
+% line is used to connect various shapes
+line/.style={
+    -, draw=line color, line width=\line thickness},
+%
+% arrow with text
+pics/text arrow/.style n args={2}{code={
+    \draw[latex-, light blue, shorten <=2pt] (0.3*#2, 0.3)
+        -- ++ (0.4*#2, 0.4) -- ++(0.4*#2, 0) node[above,
+        black, font=\LARGE]{#1};}},
+%
+% revolute joint rotating in +x direction
+pics/x plus joint/.style n args={2}{code={
+    \draw[black, line width=\line thickness, fill=light gray]
+        (0, 0.4) -- (0.3, 0) -- (0, -0.4) -- (-0.3, 0)
+        -- cycle;
+    \draw[black, line width=\line thickness] (0, -0.4)
+        -- (0, 0.4);
+    \fill[red] (-30:0.2) -- (-150:0.2) -- (90:0.2)
+        -- cycle;
+    \pic {text arrow={#1}{#2}};}},
+%
+% revolute joint rotating in +x direction
+pics/x minus joint/.style n args={2}{code={
+    \pic[rotate=180] {x plus joint={#1}{#2}};}},
+%
+% revolute joint rotating in +y direction
+pics/y plus joint/.style n args={2}{code={
+    \pic[rotate=-90] {x plus joint={#1}{#2}};}},
+%
+% revolute joint rotating in -y direction
+pics/y minus joint/.style n args={2}{code={
+    \pic[rotate=180] {x plus joint={#1}{#2}};}},
+%
+% revolute joint rotating in +z direction
+pics/z plus joint/.style n args={2}{code={
+    \draw[black, line width=\line thickness, fill=light gray]
+        (0,0) circle (0.4);
+    \draw[black, line width=\line thickness, fill=white]
+        (0,0) circle (0.2);
+    \draw[line width=2pt, red, -{Triangle[bend, length=6pt,
+        width=8pt]}] (270:0.3) arc (270:150:0.3);
+    \pic {text arrow={#1}{#2}};}},
+%
+% revolute joint rotating in -z direction
+pics/z minus joint/.style n args={2}{code={
+    \pic[yscale=-1, rotate=180] {z plus joint={#1}{#2}};}},
+%
+% shape to represent hand
+hand/.pic={
+    \draw node[draw=line color, rectangle, minimum height=8mm,
+               minimum width=8mm, line width=\line thickness,
+               chamfered rectangle, chamfered rectangle
+               corners={south west, south east}, chamfered
+               rectangle xsep=2pt, below] {};},
+%
+% shape to represent foot
+foot/.pic={
+    \draw node[draw=line color, rectangle, minimum height=4mm,
+               minimum width=12mm, line width=\line thickness,
+               below] {};},
+%
+% shape to represent head
+head/.pic={
+    \draw node[draw=line color, rectangle, minimum height=16mm,
+               minimum width=14mm,line width=\line thickness,
+               above] (box) {};
+    \draw[line] ([yshift=-2mm] box.north west) --
+                ([yshift=-2mm] box.north east);
+    \draw[line] ([yshift=+2mm] box.south west) --
+                ([yshift=+2mm] box.south east);};
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+	% from head to spine shoulder
+    \path[line] (0, 0) pic {head} |-
+            ++(-\xJointMarginX,-.2*\xJointMarginY) |-
+            ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={1}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-\verticalMargin)
+            pic {z minus joint={2}{\right}} --
+            ++(0,-2*\verticalMargin)
+            pic {y plus joint={3}{\right}} --
+            ++(0,-.8*\verticalMargin)
+            coordinate(spine shoulder);
+
+	% from spine shoulder to spine base
+    \path[line] (spine shoulder) |-
+            ++(-\xJointMarginX,-\verticalMargin) |-
+            ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={4}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY)
+            pic {y plus joint={5}{\right}} --
+            ++(0,-2*\verticalMargin)
+            pic {z plus joint={6}{\right}} |-
+            ++ (-\xJointMarginX,-\xJointMarginY) |-
+            ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={7}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY)
+            pic {y plus joint={8}{\right}} --
+            ++(0,-\verticalMargin)
+            coordinate(spine base);
+
+	% from spine base to left foot
+    \path[line] (spine base) -|
+            ++(-3*\xJointMarginX,\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY)
+            pic {z minus joint={21}{\left}} --
+            ++(0,-\verticalMargin) |-
+            ++(-\xJointMarginX,-\xJointMarginY) |-
+            ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={20}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-3*\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY) --
+            ++(\xJointMarginX,0)
+            pic {x plus joint={22}{\left}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-3*\xJointMarginY)
+            pic {foot};
+
+	% right foot is mirror image of left foot
+	\begin{scope}[xscale=-1, yscale=1]
+    \path[line] (spine base) -|
+            ++(-3*\xJointMarginY,\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY)
+            pic {z minus joint={18}{\right}} --
+            ++(0,-\verticalMargin) |-
+            ++(-\xJointMarginX,-\xJointMarginY) |-
+            ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={17}{\left}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginX,-3*\xJointMarginY) -|
+            ++(-\xJointMarginX,-\xJointMarginY) --
+            ++(\xJointMarginX,0)
+            pic {x plus joint={19}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+            ++(-\xJointMarginY,-3*\xJointMarginY)
+            pic {foot};
+	\end{scope}
+
+	% from spine shoulder to left hand
+	\path[line] (spine shoulder) |-
+	        ++(-5*\xJointMarginX,0)
+            pic {x plus joint={14}{\left}} --
+	        ++(-3*\xJointMarginX,0)
+            pic {z plus joint={13}{\left}} --
+	        ++(0,-2*\xJointMarginY)
+            pic{y plus joint={15}{\left}} |-
+            ++(-\xJointMarginX,-3*\xJointMarginY) |-
+	        ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={16}{\left}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+	        ++(-\xJointMarginX,-3*\xJointMarginY)
+            pic{hand};
+
+	% right hand is mirror image of left hand
+	\begin{scope}[xscale=-1, yscale=1]
+	\path[line] (spine shoulder) |-
+	        ++(-5*\xJointMarginX,0)
+            pic {x plus joint={10}{\right}} --
+	        ++(-3*\xJointMarginX,0)
+            pic {z plus joint={9}{\right}} --
+	        ++(0,-2*\xJointMarginY)
+            pic{y plus joint={11}{\right}} |-
+            ++(-\xJointMarginX,-3*\xJointMarginY) |-
+	        ++(\xJointMarginX,-\xJointMarginY)
+            pic {x plus joint={12}{\right}} -|
+            ++(\xJointMarginX,-\xJointMarginY) -|
+	        ++(-\xJointMarginX,-3*\xJointMarginY)
+            pic{hand};
+	\end{scope}
+\end{tikzpicture}
+\end{document}

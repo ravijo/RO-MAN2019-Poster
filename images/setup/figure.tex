@@ -1,0 +1,33 @@
+\documentclass[border=2px]{standalone}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzset{
+box/.style = {draw, rectangle, minimum height=1.4cm, text width=3.0cm, text centered, draw=white, fill=white, font=\Large},
+to/.style  = {->, >=stealth', line width=2pt, draw=white, fill=white}
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] (image) at (0,0,0) {\includegraphics[width=\linewidth]{image}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+        \iffalse
+            % Next four lines helps to locate the point needed by forming a grid
+            \draw[help lines,xstep=.1,ystep=.1] (0,0) grid (1,1);
+            \draw[help lines,xstep=.05,ystep=.05] (0,0) grid (1,1);
+            \foreach \x in {0,1,...,9} {\node[anchor=north] at (\x/10,0) {0.\x}; }
+            \foreach \y in {0,1,...,9} {\node[anchor=east] at (0,\y/10) {0.\y};}
+        \fi
+        \begin{scope}[x={(image.south east)},y={(image.north west)}]
+            \draw[to] (0.15,0.10) node[box] {Baxter Robot} -- (0.18,0.38);
+            \draw[to] (0.30,0.90) node[box] {Soft Fingertips} -- (0.388,0.49);
+            \draw[to] (0.85,0.90) node[box] {Robotic Subject} -- (0.65,0.75);
+            \draw[to] (0.50,0.10) node[box] {Sleeveless T-shirt} -- (0.45,0.35);
+            %\draw[to] (0.10,0.10) node[box] {Kinect v2} -- (0.20,0.50);
+            %\draw[to] (0.85,0.10) node[box] {Whill (Electric Wheelchair)} -- (0.75,0.28);
+        \end{scope}
+    \end{scope}
+\end{tikzpicture}
+\end{document}

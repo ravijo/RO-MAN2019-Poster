@@ -1,0 +1,91 @@
+\documentclass[a4paper]{article}
+
+\usepackage{geometry}
+\geometry{
+paperwidth=211mm,
+paperheight=84mm,
+margin=1px
+}
+
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, shapes.arrows, calc, positioning, decorations.text}
+
+\tikzstyle{arrow} = [thick, ->, >=stealth]
+
+\begin{document}
+
+% src: https://tex.stackexchange.com/a/154769
+\begin{tikzpicture}[node distance=1cm,
+mypostaction/.style 2 args={
+  decoration={
+    text align={
+      left indent=#1},
+      text along path, 
+      text={#2}
+    },
+  decorate
+}]
+
+\node (demonstration) at (0, 0) {
+\begin{tcolorbox}[enhanced,
+				  center title,
+				  title=Demonstration,
+                  width=4cm, 
+                  height=4cm,
+                  watermark stretch=1.00, 
+                  watermark graphics=demo]
+\end{tcolorbox}};
+
+\node (training) [right=of demonstration] {
+\begin{tcolorbox}[enhanced,
+				  center title,
+				  title=Training,
+                  width=5cm, 
+                  height=4.6cm,
+                  watermark stretch=1.00, 
+                  watermark graphics=plot_dmp_for_method/figure]
+\end{tcolorbox}};
+
+\node (testing) [right=of training, xshift=-0.5cm, yshift=0.3cm] {
+\begin{tcolorbox}[enhanced, 
+				  center title,
+				  title=Testing,
+                  width=9.3cm, 
+                  height=8cm]
+\end{tcolorbox}};
+
+\node (tracking) [right=of training] {
+\begin{tcolorbox}[enhanced,
+				  valign=center,
+				  halign=center,
+				  center title,
+				  title=Tracking,
+                  width=4cm, 
+                  height=3cm]
+                  Perform Forward Kinematics on the Subject
+\end{tcolorbox}};
+
+\node (rollout) [right=of tracking, xshift=-1cm] {
+\begin{tcolorbox}[enhanced, 
+				  center title,
+				  title=Rollout,
+                  width=4cm, 
+                  height=4cm,
+                  watermark stretch=1.00, 
+                  watermark graphics=rollout]
+\end{tcolorbox}};
+
+
+
+\draw[arrow] (demonstration) -- (training);
+\draw[arrow] (training) -- (testing);
+
+% src: https://tex.stackexchange.com/a/386687
+\draw[arrow] (tracking.north) to[out=60, in=135] (rollout.north);
+\path[postaction={mypostaction={11mm}{Get Control Points}, /pgf/decoration/raise=2mm}]  (tracking.north) to[out=60,in=135]  (rollout.north);
+\draw[arrow] (rollout.south) to[out=225, in=300] (tracking.south);
+\path[postaction={mypostaction={17mm}{Track Subject}, /pgf/decoration/raise=-4mm}]  (tracking.south) to[out=300,in=225]  (rollout.south);
+\end{tikzpicture}
+
+\end{document}
