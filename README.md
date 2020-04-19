@@ -7,7 +7,7 @@ Please use the following to cite this paper:
 
 R. P. Joshi, T. Shibata, K. Ogata and Y. Matsumoto, 
 "Quantitative Evaluation of Clothing Assistance using Whole-Body Robotic Simulator of the Elderly,"
-*2019 28th IEEE International Conference on Robot and Human Interactive Communication (RO-MAN), *
+<i>2019 28th IEEE International Conference on Robot and Human Interactive Communication (RO-MAN), </i>
 New Delhi, India, 2019, pp. 1-6.
 
 
