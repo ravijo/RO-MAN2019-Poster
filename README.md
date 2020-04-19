@@ -1,9 +1,11 @@
 # RO-MAN2019 Poster
 This repository contains poster (including tex code) presented at IEEE RO-MAN2019
 
+
 Please [click here](https://ieeexplore.ieee.org/document/8956308) to see the paper at IEEE Xplore Digital Library.
 
-Please use the following to cite this paper:
+
+Please use the following text to cite this paper:
 
 R. P. Joshi, T. Shibata, K. Ogata and Y. Matsumoto, 
 "Quantitative Evaluation of Clothing Assistance using Whole-Body Robotic Simulator of the Elderly,"
